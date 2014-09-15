@@ -58,8 +58,21 @@ def buscaPropuestas(limite):
     #print(submission.link_flair_css_class)
     #print(submission.link_flair_text)
     #r.send_message('Negaly', 'Titles', msg)
-    return msg
+    return already_done
 '''Main'''
+def datosExcel():
+    for submission_id in already_done:
+        submission = r.get_submission(submission_id = submission_id.strip())
+         #AUTOR/A DE LA PROPUESTA QUIEN HA ESCRITO LA SINTESIS    PUNTUACION  COMENTARIOS PORCENTAJE votos positivos  FECHA CREACION  FECHA SINTESIS  RESPONSABLE DE 2a REVISION  ESTADO DE 2a REVISION   LINK A SINTESIS
+        excelMsg=""
+        outfile = open('almacenPropuestas.txt', 'a') # Indicamos el valor 'w'.
+        excelMsg += "NUMERO DE LA PROPUESTA LINK HILO;"
+        excelMsg += submission.title+";" #NOMBRE DE LA PROPUESTA
+        excelMsg += ";;;;" # 4 vacios -> 1er/a REVISOR/A - RESPONSABLE   ESTADO DE LA SINTESIS CATEGORIA
+        excelMsg += str(submission.author) + ';' #AUTOR/A DE LA PROPUESTA
+        #print(excelMsg)
+        outfile.write(excelMsg.encode("UTF-8"))
+        outfile.close()     
 #No se para que se hace esto, pero supongo que es para decirle a reddit que bot somos (no lo he cambiado pero lo hare en un futuro)
 r = praw.Reddit('PRAW related-question monitor by u/_Daimon_ v 1.0.'
                 'Url: https://praw.readthedocs.org/en/latest/'
@@ -69,6 +82,7 @@ print "Inicio"
 while True:
     print ('vuelta')
     subreddit = r.get_subreddit(subreddit)
-    buscaPropuestas(10)
+    already_done = buscaPropuestas(10)
+    datosExcel()
     break #Para ir haciendo pruebas
     time.sleep(1800)  
